@@ -46,4 +46,7 @@
             "color": "green"
         }
     ],
+    "cSpell.words": [
+        "importlib"
+    ],
 }
