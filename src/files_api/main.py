@@ -1,4 +1,5 @@
 from datetime import datetime
+from email import message
 from typing import (
     List,
     Optional,
@@ -43,6 +44,11 @@ class FileMetadata(BaseModel):
     size_bytes: int
 
 
+class PutFileResponse(BaseModel):
+    file_path: str
+    message: str
+
+
 # more pydantic models ...
 
 
@@ -52,15 +58,31 @@ class FileMetadata(BaseModel):
 
 
 @APP.put("/files/{file_path:path}")
-async def upload_file(file_path: str, file: UploadFile, response: Response) -> ...:
+async def upload_file(file_path: str, file: UploadFile, response: Response) -> PutFileResponse:
     """Upload a file."""
-    ...
+
+    object_already_exists = object_exists_in_s3(bucket_name=S3_BUCKET_NAME, object_key=file_path)
+    if object_already_exists:
+        response_message = f"Existing file updated at path: /{file_path}"
+        response.status_code = status.HTTP_200_OK
+    else:
+        response_message = f"New file created at path: /{file_path}"
+        response.status_code = status.HTTP_201_CREATED
+
+    file_contents: bytes = await file.read()
+    upload_s3_object(
+        bucket_name=S3_BUCKET_NAME,
+        object_key=file_path,
+        file_content=file_contents,
+        content_type=file.content_type,
+    )
+    return PutFileResponse(file_path=file_path, message=response_message)
 
 
 @APP.get("/files")
 async def list_files(
     query_params=...,
-) -> ...:
+):
     """List files with pagination."""
     ...
 
@@ -77,7 +99,7 @@ async def get_file_metadata(file_path: str, response: Response) -> Response:
 @APP.get("/files/{file_path:path}")
 async def get_file(
     file_path: str,
-) -> ...:
+):
     """Retrieve a file."""
     ...
 

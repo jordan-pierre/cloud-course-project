@@ -7,6 +7,12 @@
 build:
 	bash run.sh build
 
+run:
+	bash run.sh run
+
+run-mock:
+	bash run.sh run-mock
+
 clean:
 	bash run.sh clean
 
@@ -48,3 +54,4 @@ test:
 
 test-wheel-locally:
 	bash run.sh test:wheel-locally
+
