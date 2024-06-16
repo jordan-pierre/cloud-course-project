@@ -17,7 +17,6 @@ def upload_s3_object(
     content_type: Optional[str] = None,
     s3_client: Optional["S3Client"] = None,
 ) -> None:
-
     content_type = content_type or "application/octet-stream"
     s3_client = s3_client or boto3.client("s3")
 
