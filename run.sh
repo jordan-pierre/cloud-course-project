@@ -2,17 +2,7 @@
 
 set -e
 
-#####################
-# --- Constants --- #
-#####################
-
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-MINIMUM_TEST_COVERAGE_PERCENT=0
-
-
-##########################
-# --- Task Functions --- #
-##########################
 
 # install core and development Python dependencies into the currently activated venv
 function install {
@@ -47,18 +37,14 @@ function test:ci {
 # (example) ./run.sh test tests/test_states_info.py::test__slow_add
 function run-tests {
     PYTEST_EXIT_STATUS=0
-
-    # clean the test-reports dir
-    rm -rf "$THIS_DIR/test-reports" || mkdir "$THIS_DIR/test-reports"
-
-    # execute the tests, calculate coverage, and generate coverage reports in the test-reports dir
+    rm -rf "$THIS_DIR/test-reports" || true
     python -m pytest ${@:-"$THIS_DIR/tests/"} \
         --cov "${COVERAGE_DIR:-$THIS_DIR/src}" \
         --cov-report html \
         --cov-report term \
         --cov-report xml \
         --junit-xml "$THIS_DIR/test-reports/report.xml" \
-        --cov-fail-under "$MINIMUM_TEST_COVERAGE_PERCENT" || ((PYTEST_EXIT_STATUS+=$?))
+        --cov-fail-under 60 || ((PYTEST_EXIT_STATUS+=$?))
     mv coverage.xml "$THIS_DIR/test-reports/" || true
     mv htmlcov "$THIS_DIR/test-reports/" || true
     mv .coverage "$THIS_DIR/test-reports/" || true
@@ -73,7 +59,7 @@ function test:wheel-locally {
     clean || true
     pip install build
     build
-    pip install ./dist/*.whl pytest pytest-cov
+    pip install ./dist/*.whl pytest pytest-cov moto[s3]
     test:ci
     deactivate || true
 }
