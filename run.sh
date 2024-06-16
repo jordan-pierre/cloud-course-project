@@ -59,7 +59,7 @@ function test:wheel-locally {
     clean || true
     pip install build
     build
-    pip install ./dist/*.whl pytest pytest-cov moto
+    pip install ./dist/*.whl pytest pytest-cov
     test:ci
     deactivate || true
 }
