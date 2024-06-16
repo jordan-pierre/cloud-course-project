@@ -55,8 +55,7 @@ def fetch_s3_object(
     :return: Metadata of the object.
     """
     s3_client = s3_client or boto3.client("s3")
-    response: "GetObjectOutputTypeDef" = s3_client.get_object(Bucket=bucket_name, Key=object_key)
-
+    response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
     return response
 
 
@@ -78,7 +77,6 @@ def fetch_s3_objects_using_page_token(
         1. Possibly empty list of objects in the current page.
         2. Next continuation token if there are more pages, otherwise None.
     """
-
     s3_client = s3_client or boto3.client("s3")
     response: "ListObjectsV2OutputTypeDef" = s3_client.list_objects_v2(
         Bucket=bucket_name,

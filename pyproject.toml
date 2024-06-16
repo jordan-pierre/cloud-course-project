@@ -3,9 +3,9 @@
 ############################
 
 [project]
-name = "cloud-course-project"
+name = "files-api"
 description = "My package description"
-authors = [{ name = "<your name>", email = "some-email@gmail.com" }]
+authors = [{ name = "Jordan", email = "some-email@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "MIT" }
@@ -41,24 +41,15 @@ static-code-qa = [
 # - automatically apply formatting
 # - show enhanced autocompletion for stubs libraries
 # See .vscode/settings.json to see how VS Code is configured to use these tools
-dev = ["cloud-course-project[test,release,static-code-qa,stubs,notebooks]"]
+dev = ["files-api[test,release,static-code-qa,stubs,notebooks]"]
 
 [build-system]
 # Minimum requirements for the build system to execute.
 requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-# include more than only .py files in the distribution package (wheel)
 [tool.setuptools.package-data]
 files_api = ["*.json"]
-
-
-##############################
-# --- Code Quality Tools --- #
-##############################
-
-[tool.pytest.ini_options]
-markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
 
 [tool.black]
 line-length = 99
@@ -72,7 +63,7 @@ exclude = '''
 
 [tool.flake8]
 docstring-convention = "all"
-ignore = ["D107", "D212", "E501", "W503", "W605", "D203", "D100"]
+ignore = ["D107", "D212", "E501", "W503", "W605", "D203", "D100", "D200"]
 exclude = ["venv"]
 max-line-length = 119
 

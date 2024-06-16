@@ -12,6 +12,7 @@ from tests.consts import TEST_BUCKET_NAME
 
 # Set the environment variables to point away from AWS
 def point_away_from_aws() -> None:
+    """Redirect AWS keys/tokens for safety."""
     os.environ["AWS_ACCESS_KEY_ID"] = "testing"
     os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
     os.environ["AWS_SECURITY_TOKEN"] = "testing"

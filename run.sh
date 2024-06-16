@@ -2,17 +2,7 @@
 
 set -e
 
-#####################
-# --- Constants --- #
-#####################
-
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-MINIMUM_TEST_COVERAGE_PERCENT=0
-
-
-##########################
-# --- Task Functions --- #
-##########################
 
 # install core and development Python dependencies into the currently activated venv
 function install {
@@ -39,7 +29,7 @@ function test:quick {
 
 # execute tests against the installed package; assumes the wheel is already installed
 function test:ci {
-    INSTALLED_PKG_DIR="$(python -c 'import files_api; print(files_api.__path__[0])')"
+    INSTALLED_PKG_DIR="$(python -c 'import learn_boto3; print(learn_boto3.__path__[0])')"
     # in CI, we must calculate the coverage for the installed package, not the src/ folder
     COVERAGE_DIR="$INSTALLED_PKG_DIR" run-tests
 }
@@ -47,18 +37,14 @@ function test:ci {
 # (example) ./run.sh test tests/test_states_info.py::test__slow_add
 function run-tests {
     PYTEST_EXIT_STATUS=0
-
-    # clean the test-reports dir
-    rm -rf "$THIS_DIR/test-reports" || mkdir "$THIS_DIR/test-reports"
-
-    # execute the tests, calculate coverage, and generate coverage reports in the test-reports dir
+    rm -rf "$THIS_DIR/test-reports" || true
     python -m pytest ${@:-"$THIS_DIR/tests/"} \
         --cov "${COVERAGE_DIR:-$THIS_DIR/src}" \
         --cov-report html \
         --cov-report term \
         --cov-report xml \
         --junit-xml "$THIS_DIR/test-reports/report.xml" \
-        --cov-fail-under "$MINIMUM_TEST_COVERAGE_PERCENT" || ((PYTEST_EXIT_STATUS+=$?))
+        --cov-fail-under 60 || ((PYTEST_EXIT_STATUS+=$?))
     mv coverage.xml "$THIS_DIR/test-reports/" || true
     mv htmlcov "$THIS_DIR/test-reports/" || true
     mv .coverage "$THIS_DIR/test-reports/" || true
