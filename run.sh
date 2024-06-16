@@ -29,7 +29,7 @@ function test:quick {
 
 # execute tests against the installed package; assumes the wheel is already installed
 function test:ci {
-    INSTALLED_PKG_DIR="$(python -c 'import learn_boto3; print(learn_boto3.__path__[0])')"
+    INSTALLED_PKG_DIR="$(python -c 'import files_api; print(files_api.__path__[0])')"
     # in CI, we must calculate the coverage for the installed package, not the src/ folder
     COVERAGE_DIR="$INSTALLED_PKG_DIR" run-tests
 }
