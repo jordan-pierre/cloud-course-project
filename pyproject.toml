@@ -9,7 +9,7 @@ authors = [{ name = "Jordan", email = "some-email@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "MIT" }
-dependencies = ["boto3", "fastapi"]
+dependencies = ["boto3", "fastapi", "pydantic-settings"]
 classifiers = ["Programming Language :: Python :: 3"]
 keywords = ["one", "two"]
 
@@ -42,7 +42,7 @@ static-code-qa = [
 # - automatically apply formatting
 # - show enhanced autocompletion for stubs libraries
 # See .vscode/settings.json to see how VS Code is configured to use these tools
-dev = ["files-api[test,release,static-code-qa,stubs,notebooks,api]"]
+dev = ["cloud-course-project[test,release,static-code-qa,stubs,notebooks]"]
 
 [build-system]
 # Minimum requirements for the build system to execute.
@@ -52,9 +52,16 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.package-data]
 files_api = ["*.json"]
 
+
+##############################
+# --- Code Quality Tools --- #
+##############################
+
+[tool.pytest.ini_options]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+
 [tool.black]
 line-length = 99
-# regular expression ignoring multiple patterns separated by '|' and newlines
 exclude = '''
 /(
     \.venv
@@ -64,7 +71,25 @@ exclude = '''
 
 [tool.flake8]
 docstring-convention = "all"
-ignore = ["D107", "D212", "E501", "W503", "W605", "D203", "D100", "D200"]
+ignore = [
+    "D107",
+    "D212",
+    "E501",
+    "W503",
+    "W605",
+    "D203",
+    "D100",
+    # D103: Missing docstring in public function
+    "D103",
+    # D101: Missing docstring in public class
+    "D101",
+    # D102: Missing docstring in public method
+    "D102",
+    # D104: Missing docstring in public package
+    "D104",
+    # D105: Missing docstring in magic method
+    "D105",
+]
 exclude = ["venv"]
 max-line-length = 119
 
@@ -86,4 +111,6 @@ disable = [
     "import-error",
     "too-few-public-methods",
     "redefined-outer-name",
+    "missing-module-docstring",
+    "missing-class-docstring",
 ]
