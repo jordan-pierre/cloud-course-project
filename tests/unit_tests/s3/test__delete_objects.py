@@ -10,9 +10,6 @@ from tests.consts import TEST_BUCKET_NAME
 
 # pylint: disable=unused-argument
 def test_delete_existing_s3_object(mocked_aws: None):
-    """
-    Delete exiting s3 object using fixture.
-    """
     s3_client = boto3.client("s3")
     s3_client.put_object(Bucket=TEST_BUCKET_NAME, Key="testfile.txt", Body="test content")
     delete_s3_object(TEST_BUCKET_NAME, "testfile.txt")
@@ -21,9 +18,6 @@ def test_delete_existing_s3_object(mocked_aws: None):
 
 # pylint: disable=unused-argument
 def test_delete_nonexistent_s3_object(mocked_aws: None):
-    """
-    Delete a non-existent s3 object using fixture.
-    """
     # create a file
     upload_s3_object(TEST_BUCKET_NAME, "testfile.txt", b"test content")
     # delete the file, so we know it is not present
